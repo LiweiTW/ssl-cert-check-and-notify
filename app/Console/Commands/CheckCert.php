@@ -75,7 +75,7 @@ class CheckCert extends Command
                     $URI = env("TEAMS_WEBHOOK");
                     $client = new Client();
                     $response = $client->post($URI, [RequestOptions::JSON => [
-                        "title" => $message["domain"] ?? "",
+                        "title" => $message["domain"] ?? "" . " - SSL cert expired date check",
                         "text" => "**{$message["leftDays"]}** day(s) left. Expired at {$message["expiredTime"]}",
                     ]]);
                 }
@@ -84,10 +84,6 @@ class CheckCert extends Command
                 break;
         }
 
-
-
-
-        dd($result);
         return 0;
     }
 }
