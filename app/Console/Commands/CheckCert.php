@@ -81,6 +81,35 @@ class CheckCert extends Command
                     ]]);
                 }
                 break;
+            case "slack":
+                foreach ($result as $message) {
+                    $URI = env("SLACK_WEBHOOK");
+                    $client = new Client();
+                    $response = $client->post($URI, [RequestOptions::JSON => [
+                        "blocks" => [
+                            [
+                                "type" => "header",
+                                "text" => [
+                                    "type" => "plain_text",
+                                    "text" => Arr::get($message, "domain", "") . " - ssl cert expired date check",
+                                ],
+                            ],
+                            [
+                                "type" => "context",
+                                "elements" => [
+                                    [
+                                        "type" => "mrkdwn",
+                                        "text" => "`{$message["leftDays"]}` day(s) left. Expired at {$message["expiredTime"]}",
+                                    ],
+                                ],
+                            ],
+                            [
+                                "type" => "divider",
+                            ],
+                        ],
+                    ]]);
+                }
+                break;
             default:
                 break;
         }
